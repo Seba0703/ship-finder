@@ -31,3 +31,5 @@ artifacts:
     - imagedefinitions.json
     - target/ship-finder-0.0.1.jar
     - appspec.yml
+    - scripts/startServer
+    - scripts/stopServer
