@@ -7,6 +7,7 @@ import ar.com.project.dao.SatelliteRepository;
 import ar.com.project.entity.Satellite;
 import ar.com.project.exception.BaseException;
 import ar.com.project.exception.NoSufficientDataException;
+import ar.com.project.service.SatelliteService;
 import ar.com.project.service.ShipFacade;
 import ar.com.project.service.ShipSplitFacade;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +26,7 @@ import static ar.com.project.service.impl.SatelliteServiceImpl.CANTIDAD_SATELITE
 public class ShipSplitFacadeImpl implements ShipSplitFacade {
 
     @Autowired
-    private SatelliteRepository satelliteRepo;
+    private SatelliteService satelliteServ;
 
     @Autowired
     private ShipFacade shipFacade;
@@ -34,18 +35,10 @@ public class ShipSplitFacadeImpl implements ShipSplitFacade {
     @Override
     public DecodedMessage getMessage() throws BaseException {
 
-        List<Satellite> satellites = satelliteRepo.findAll();
+        Messages mssg = satelliteServ.getMessages();
 
-        if(!CollectionUtils.isEmpty(satellites)
-                && satellites.size() == CANTIDAD_SATELITES
-                && satellites.stream().filter(sat -> Objects.nonNull(sat.getSatelliteInfo())).count() == CANTIDAD_SATELITES
-                && satellites.stream().filter(sat -> Objects.nonNull(sat.getSatellitePosition())).count() == CANTIDAD_SATELITES) {
+        return shipFacade.findAndDecode(mssg);
 
-            Messages mssg = this.buildMessages(satellites);
-            return shipFacade.findAndDecode(mssg);
-        }
-
-        throw new NoSufficientDataException();
     }
 
     private Messages buildMessages(List<Satellite> satellites) {

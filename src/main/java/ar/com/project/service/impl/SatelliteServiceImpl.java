@@ -1,11 +1,13 @@
 package ar.com.project.service.impl;
 
+import ar.com.project.controller.request.Messages;
 import ar.com.project.controller.request.model.SatelliteMessage;
 import ar.com.project.dao.SatelliteRepository;
 import ar.com.project.dto.SatellitesPositionDTO;
 import ar.com.project.entity.Satellite;
 import ar.com.project.entity.SatelliteInfo;
 import ar.com.project.exception.BaseException;
+import ar.com.project.exception.NoSufficientDataException;
 import ar.com.project.exception.ObjectNotFoundException;
 import ar.com.project.exception.SatelliteEmptyException;
 import ar.com.project.service.SatelliteService;
@@ -14,9 +16,7 @@ import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class SatelliteServiceImpl implements SatelliteService {
@@ -59,6 +59,38 @@ public class SatelliteServiceImpl implements SatelliteService {
         } else {
             throw new ObjectNotFoundException();
         }
+    }
+
+    public Messages getMessages() throws BaseException {
+        List<Satellite> satellites = satelliteRepo.findAll();
+        if(!CollectionUtils.isEmpty(satellites)
+                && satellites.size() == CANTIDAD_SATELITES
+                && satellites.stream().filter(sat -> Objects.nonNull(sat.getSatelliteInfo())).count() == CANTIDAD_SATELITES
+                && satellites.stream().filter(sat -> Objects.nonNull(sat.getSatellitePosition())).count() == CANTIDAD_SATELITES) {
+
+            return this.buildMessages(satellites);
+        }
+
+        throw new NoSufficientDataException();
+    }
+
+    private Messages buildMessages(List<Satellite> satellites) {
+        Messages mssg = new Messages();
+        List<SatelliteMessage> satMssgs = new ArrayList<>();
+        mssg.setSatellites(satMssgs);
+        for(Satellite sat: satellites) {
+            SatelliteMessage satMssg = new SatelliteMessage();
+            satMssg.setName(sat.getName());
+            satMssg.setWords(this.transformToList(sat.getSatelliteInfo().getMessage()));
+            satMssg.setDistance(sat.getSatelliteInfo().getDistance());
+            satMssgs.add(satMssg);
+        }
+
+        return mssg;
+    }
+
+    private List<String> transformToList(String message) {
+        return Arrays.asList(message.split(","));
     }
 
     private void buildInfo(Satellite sat, List<String> messages, double distance) {
