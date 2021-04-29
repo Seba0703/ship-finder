@@ -7,6 +7,7 @@ import ar.com.project.entity.Satellite;
 import ar.com.project.entity.SatelliteInfo;
 import ar.com.project.exception.BaseException;
 import ar.com.project.exception.ObjectNotFoundException;
+import ar.com.project.exception.SatelliteEmptyException;
 import ar.com.project.service.SatelliteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
@@ -41,7 +42,7 @@ public class SatelliteServiceImpl implements SatelliteService {
 
             return new SatellitesPositionDTO(positions);
         } else {
-            throw new BaseException();
+            throw new SatelliteEmptyException();
         }
     }
 
