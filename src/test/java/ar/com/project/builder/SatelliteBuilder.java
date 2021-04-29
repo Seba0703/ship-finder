@@ -16,6 +16,12 @@ public class SatelliteBuilder {
         return new Satellite(1, SATO, pos, null);
     }
 
+    public static Satellite buildSatoSatelliteWithInfo() {
+        Satellite pos = buildSatoSatellite();
+        pos.setSatelliteInfo(SatelliteInfoBuilder.build());
+        return pos;
+    }
+
     public static Satellite buildSkywalkerSatellite() {
         SatellitePosition pos = new SatellitePosition();
         pos.setX(1.1);
@@ -23,10 +29,22 @@ public class SatelliteBuilder {
         return new Satellite(1, SKYWALKER, pos, null);
     }
 
+    public static Satellite buildSkywalkerSatelliteWithInfo() {
+        Satellite pos = buildSkywalkerSatellite();
+        pos.setSatelliteInfo(SatelliteInfoBuilder.build());
+        return pos;
+    }
+
     public static Satellite buildKenobiSatellite() {
         SatellitePosition pos = new SatellitePosition();
         pos.setX(1000.1);
         pos.setY(100.1);
         return new Satellite(1, KENOBI, pos, null);
+    }
+
+    public static Satellite buildKenobiSatelliteWithInfo() {
+        Satellite pos = buildKenobiSatellite();
+        pos.setSatelliteInfo(SatelliteInfoBuilder.build());
+        return pos;
     }
 }

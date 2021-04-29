@@ -1,6 +1,7 @@
 package ar.com.project.geometry;
 
-import static java.lang.Math.*;
+import static java.lang.Math.max;
+import static java.lang.Math.sqrt;
 
 // References:
 // http://paulbourke.net/geometry/2circle/

@@ -1,10 +1,10 @@
 package ar.com.project.geometry;
 
-import static java.lang.Math.*;
-
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+
+import static java.lang.Math.*;
 
 public final class Vector2 implements Serializable {
 

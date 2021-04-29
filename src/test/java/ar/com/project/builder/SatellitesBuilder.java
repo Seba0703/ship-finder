@@ -18,6 +18,17 @@ public class SatellitesBuilder {
         return satellites;
     }
 
+    public static List<Satellite> buildSatellitesWithInfo() {
+        List<Satellite> satellites = new ArrayList<>();
+        Satellite sato = SatelliteBuilder.buildSatoSatelliteWithInfo();
+        Satellite skywalker = SatelliteBuilder.buildSkywalkerSatelliteWithInfo();
+        Satellite kenobi = SatelliteBuilder.buildKenobiSatelliteWithInfo();
+        satellites.add(sato);
+        satellites.add(kenobi);
+        satellites.add(skywalker);
+        return satellites;
+    }
+
     public static List<Satellite> buildTwoSatellites() {
         List<Satellite> satellites = new ArrayList<>();
         Satellite sato = SatelliteBuilder.buildSatoSatellite();

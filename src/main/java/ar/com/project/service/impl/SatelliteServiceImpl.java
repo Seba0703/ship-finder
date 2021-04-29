@@ -6,11 +6,9 @@ import ar.com.project.dao.SatelliteRepository;
 import ar.com.project.dto.SatellitesPositionDTO;
 import ar.com.project.entity.Satellite;
 import ar.com.project.entity.SatelliteInfo;
-import ar.com.project.exception.BaseException;
-import ar.com.project.exception.NoSufficientDataException;
-import ar.com.project.exception.ObjectNotFoundException;
-import ar.com.project.exception.SatelliteEmptyException;
+import ar.com.project.exception.*;
 import ar.com.project.service.SatelliteService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
@@ -46,7 +44,9 @@ public class SatelliteServiceImpl implements SatelliteService {
         }
     }
 
-    public void saveMessage(String satelliteName, List<String> messages, double distance ) throws ObjectNotFoundException {
+    public void saveMessage(String satelliteName, List<String> messages, double distance ) throws BaseException {
+
+        this.validate(satelliteName, messages, distance);
 
         Optional<Satellite> op = this.findSatellite(satelliteName);
 
@@ -61,17 +61,47 @@ public class SatelliteServiceImpl implements SatelliteService {
         }
     }
 
+    private void validate(String satelliteName, List<String> messages, double distance) throws BaseException {
+        if(StringUtils.isEmpty(satelliteName)) {
+            throw new SatelliteEmptyException();
+        }
+
+        if(CollectionUtils.isEmpty(messages)) {
+            throw new EmptyMessageException();
+        }
+
+        if(distance < 0) {
+            throw new DistanceException();
+        }
+    }
+
     public Messages getMessages() throws BaseException {
         List<Satellite> satellites = satelliteRepo.findAll();
-        if(!CollectionUtils.isEmpty(satellites)
-                && satellites.size() == CANTIDAD_SATELITES
-                && satellites.stream().filter(sat -> Objects.nonNull(sat.getSatelliteInfo())).count() == CANTIDAD_SATELITES
-                && satellites.stream().filter(sat -> Objects.nonNull(sat.getSatellitePosition())).count() == CANTIDAD_SATELITES) {
+
+        if(this.validate(satellites)) {
 
             return this.buildMessages(satellites);
         }
 
         throw new NoSufficientDataException();
+    }
+
+    private boolean validate(List<Satellite> satellites) {
+        return this.checkSatsSize(satellites)
+                && this.checkInfo(satellites)
+                && this.checkPosition(satellites);
+    }
+
+    private boolean checkSatsSize(List<Satellite> satellites) {
+        return !CollectionUtils.isEmpty(satellites) && satellites.size() == CANTIDAD_SATELITES;
+    }
+
+    private boolean checkInfo(List<Satellite> satellites) {
+        return satellites.stream().filter(sat -> Objects.nonNull(sat.getSatelliteInfo())).count() == CANTIDAD_SATELITES;
+    }
+
+    private boolean checkPosition(List<Satellite> satellites) {
+        return satellites.stream().filter(sat -> Objects.nonNull(sat.getSatellitePosition())).count() == CANTIDAD_SATELITES;
     }
 
     private Messages buildMessages(List<Satellite> satellites) {

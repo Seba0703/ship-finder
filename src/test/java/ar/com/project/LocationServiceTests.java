@@ -1,13 +1,10 @@
 package ar.com.project;
 
 
-import ar.com.project.ShipFinderApplication;
 import ar.com.project.exception.BaseException;
 import ar.com.project.service.LocationService;
-import ar.com.project.service.impl.LocationServiceImpl;
 import com.lemmingapex.trilateration.NonLinearLeastSquaresSolver;
 import com.lemmingapex.trilateration.TrilaterationFunction;
-import lombok.Setter;
 import org.apache.commons.math3.fitting.leastsquares.LevenbergMarquardtOptimizer;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -55,6 +52,18 @@ public class LocationServiceTests {
         double[] distances = new double[]{1.0, 1.0, 1.0};
         try {
              locationService.getLocation(positions, distances);
+            fail();
+        } catch (BaseException e) {
+            assertTrue(true);
+        }
+    }
+
+    @Test
+    public void GIVEN_TresCirculosConcentricos_WHEN_SeBuscaUnainterseccion_THEN_UnError(){
+        double[][] positions = new double[][]{{1.0, 0}, {1.0, 0}, {1.0, 0}};
+        double[] distances = new double[]{1.0, 2.0, 3.0};
+        try {
+            locationService.getLocation(positions, distances);
             fail();
         } catch (BaseException e) {
             assertTrue(true);
