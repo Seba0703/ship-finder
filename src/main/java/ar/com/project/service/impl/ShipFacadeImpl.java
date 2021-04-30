@@ -6,11 +6,13 @@ import ar.com.project.controller.response.DecodedMessage;
 import ar.com.project.controller.response.model.Position;
 import ar.com.project.dto.MessageDTO;
 import ar.com.project.exception.BaseException;
+import ar.com.project.exception.NoSufficientDataException;
 import ar.com.project.service.MessageDecoderService;
 import ar.com.project.service.ShipFacade;
 import ar.com.project.service.ShipFinderFacade;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,10 +38,13 @@ public class ShipFacadeImpl implements ShipFacade {
         return new DecodedMessage(position, mssg.getMessage());
     }
 
-    private List<List<String>> buildMessages(List<SatelliteMessage> satellites) {
+    private List<List<String>> buildMessages(List<SatelliteMessage> satellites) throws BaseException {
         List<List<String>> mssgs = new ArrayList<>();
         for(SatelliteMessage satelliteMessage: satellites) {
-            mssgs.add(satelliteMessage.getWords());
+            if(CollectionUtils.isEmpty(satelliteMessage.getMessage())) {
+                throw new NoSufficientDataException();
+            }
+            mssgs.add(satelliteMessage.getMessage());
         }
 
         return mssgs;

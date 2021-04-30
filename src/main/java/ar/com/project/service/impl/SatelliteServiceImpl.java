@@ -111,7 +111,7 @@ public class SatelliteServiceImpl implements SatelliteService {
         for(Satellite sat: satellites) {
             SatelliteMessage satMssg = new SatelliteMessage();
             satMssg.setName(sat.getName());
-            satMssg.setWords(this.transformToList(sat.getSatelliteInfo().getMessage()));
+            satMssg.setMessage(this.transformToList(sat.getSatelliteInfo().getMessage()));
             satMssg.setDistance(sat.getSatelliteInfo().getDistance());
             satMssgs.add(satMssg);
         }
@@ -120,7 +120,7 @@ public class SatelliteServiceImpl implements SatelliteService {
     }
 
     private List<String> transformToList(String message) {
-        return Arrays.asList(message.split(","));
+        return new ArrayList<>(Arrays.asList(message.split(",", -1)));
     }
 
     private void buildInfo(Satellite sat, List<String> messages, double distance) {

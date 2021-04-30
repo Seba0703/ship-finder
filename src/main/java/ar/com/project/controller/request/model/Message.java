@@ -7,5 +7,5 @@ import java.util.List;
 @Data
 public class Message {
     private Double distance;
-    private List<String> words;
+    private List<String> message;
 }

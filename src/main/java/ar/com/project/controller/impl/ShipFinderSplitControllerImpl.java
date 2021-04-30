@@ -32,7 +32,7 @@ public class ShipFinderSplitControllerImpl implements ShipFinderSplitController 
 
         try {
 
-            satelliteServ.saveMessage(satelliteName, messages.getWords(), messages.getDistance());
+            satelliteServ.saveMessage(satelliteName, messages.getMessage(), messages.getDistance());
             return new ACK();
 
         } catch (BaseException e) {

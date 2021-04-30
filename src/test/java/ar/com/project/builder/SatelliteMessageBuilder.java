@@ -15,7 +15,7 @@ public class SatelliteMessageBuilder {
         List<String> words = new ArrayList<>();
         words.add("asd");
         words.add("dd");
-        sat.setWords(words);
+        sat.setMessage(words);
         sat.setName(SATO);
         return sat;
     }
