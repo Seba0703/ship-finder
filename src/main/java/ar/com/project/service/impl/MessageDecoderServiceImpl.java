@@ -125,7 +125,8 @@ public class MessageDecoderServiceImpl implements MessageDecoderService {
 
     private void removeGap(List<List<String>> messagesSatellites, int i, int indexMin) {
         for (int j = 0; j < messagesSatellites.size(); j++) {
-            if (j != indexMin) {
+            List<String> msg = messagesSatellites.get(j);
+            if (j != indexMin && i < msg.size()) {
                 messagesSatellites.get(j).remove(i);
             }
         }
